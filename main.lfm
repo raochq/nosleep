@@ -16,9 +16,16 @@ object Form1: TForm1
   object PopupMenu1: TPopupMenu
     Left = 118
     Top = 67
-    object MenuItem1: TMenuItem
+    object MLock: TMenuItem
+      AutoCheck = True
+      Caption = '阻止锁屏'
+      Checked = True
+      Default = True
+      OnClick = MLockClick
+    end
+    object MExit: TMenuItem
       Caption = '退出'
-      OnClick = MenuItem1Click
+      OnClick = MExitClick
     end
   end
 end

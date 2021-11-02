@@ -13,11 +13,13 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
-    MenuItem1: TMenuItem;
+    MExit: TMenuItem;
+    MLock: TMenuItem;
     PopupMenu1: TPopupMenu;
     TrayIcon1: TTrayIcon;
     procedure FormCreate(Sender: TObject);
-    procedure MenuItem1Click(Sender: TObject);
+    procedure MExitClick(Sender: TObject);
+    procedure MLockClick(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
   private
 
@@ -67,13 +69,18 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   TrayIcon1.Icon := Application.Icon;
   application.ShowMainForm:=false;
-  BlockSleep(true);
+  BlockSleep(MLock.Checked);
 end;
 
-procedure TForm1.MenuItem1Click(Sender: TObject);
+procedure TForm1.MExitClick(Sender: TObject);
 begin
   BlockSleep(false);
   application.Terminate;
+end;
+
+procedure TForm1.MLockClick(Sender: TObject);
+begin
+  BlockSleep(MLock.Checked);
 end;
 
 procedure TForm1.TrayIcon1Click(Sender: TObject);
