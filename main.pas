@@ -5,7 +5,7 @@ unit main;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Menus;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Menus,Windows;
 
 type
     EXECUTION_STATE = DWORD;
@@ -18,6 +18,7 @@ type
     TrayIcon1: TTrayIcon;
     procedure FormCreate(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
+    procedure TrayIcon1Click(Sender: TObject);
   private
 
   public
@@ -46,16 +47,20 @@ procedure BlockSleep(NoSleep:boolean=true);
 begin
   if NoSleep then
   begin
+    // DisableSCR
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, 0, nil, SPIF_SENDWININICHANGE);
     // try this for vista, it will fail on XP
-    if (SetThreadExecutionState(ES_CONTINUOUS or ES_SYSTEM_REQUIRED or ES_AWAYMODE_REQUIRED) <>0)
-     then    // try XP variant as well just to make sure
-       SetThreadExecutionState(ES_CONTINUOUS or ES_SYSTEM_REQUIRED);
-      // if
+    //SetThreadExecutionState(ES_CONTINUOUS or ES_SYSTEM_REQUIRED or ES_DISPLAY_REQUIRED);
+    if (SetThreadExecutionState(ES_CONTINUOUS or ES_SYSTEM_REQUIRED or ES_DISPLAY_REQUIRED) = 0)
+    then    // try XP variant as well just to make sure
+         SetThreadExecutionState(ES_CONTINUOUS or ES_SYSTEM_REQUIRED);
   end
   else
   begin
-      // set state back to normal
-      SetThreadExecutionState(ES_CONTINUOUS);
+    // EnableSCR
+    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, 1, nil, SPIF_SENDWININICHANGE);
+    // set state back to normal
+    SetThreadExecutionState(ES_CONTINUOUS);
   end;
 end;
 procedure TForm1.FormCreate(Sender: TObject);
@@ -69,6 +74,11 @@ procedure TForm1.MenuItem1Click(Sender: TObject);
 begin
   BlockSleep(false);
   application.Terminate;
+end;
+
+procedure TForm1.TrayIcon1Click(Sender: TObject);
+begin
+  PopupMenu1.PopUp;
 end;
 
 end.
